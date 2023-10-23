@@ -1,0 +1,89 @@
+import os
+import unittest
+from dataProcessor import read_json_file
+
+class TestDataProcessor(unittest.TestCase):
+    def test_read_json_file_success(self):
+        current_directory = os.path.dirname(__file__)
+        file_path = os.path.join(current_directory, "users.json")
+
+        data = read_json_file(file_path)
+       
+        self.assertEqual(len(data), 10)  # Ajustar o número esperado de registros
+        self.assertEqual(data[0]['name'], 'Alice')
+        self.assertEqual(data[1]['age'], 25)
+
+    def test_read_json_file_file_not_found(self):
+        with self.assertRaises(FileNotFoundError):
+            read_json_file("non_existent.json")
+
+    def test_read_json_file_invalid_json(self):
+        with open("invalid.json", "w") as file:
+            file.write("invalid json data")
+        with self.assertRaises(ValueError):
+            read_json_file("invalid.json")
+
+if __name__ == '__main__':
+    unittest.main()
+    class TestDataProcessor(unittest.TestCase):
+    # ... test_read_json_file_success ...
+
+    def test_read_empty_json_file(self):
+        with open("empty.json", "w") as file:
+            file.write("[]")  # Cria um arquivo JSON vazio
+        data = read_json_file("empty.json")
+        self.assertEqual(len(data), 0)  # Espera-se que o arquivo vazio retorne uma lista vazia
+
+    def test_read_json_file_missing_country(self):
+        data = [
+            {'name': 'Alice', 'age': 25},
+            {'name': 'Bob', 'age': 30}
+        ]
+        with open("missing_country.json", "w") as file:
+            json.dump(data, file)  # Cria um arquivo JSON sem o campo 'country'
+        with self.assertRaises(KeyError):
+            read_json_file("missing_country.json")
+class TestDataProcessor(unittest.TestCase):
+    # ... test_read_json_file_success ...
+
+    def test_filter_by_country(self):
+        data = [
+            {'name': 'Alice', 'age': 25, 'country': 'USA'},
+            {'name': 'Bob', 'age': 30, 'country': 'Canada'},
+            {'name': 'Charlie', 'age': 35, 'country': 'USA'},
+            {'name': 'David', 'age': 28, 'country': 'Canada'},
+        ]
+
+        filtered_data = filter_by_country(data, 'USA')
+        self.assertEqual(len(filtered_data), 2)  # Espera-se que haja 2 registros com 'USA' como país
+
+    def test_calculate_average_age(self):
+        data = [
+            {'name': 'Alice', 'age': 25, 'country': 'USA'},
+            {'name': 'Bob', 'age': 30, 'country': 'USA'},
+        ]
+
+        average_age = calculate_average_age(data)
+        self.assertEqual(average_age, 27.5)  # A média das idades é (25 + 30) / 2
+
+if __name__ == '__main__':
+    unittest.main()
+class TestDataProcessor(unittest.TestCase):
+    # ... outros testes ...
+
+    def test_avgAgeCountry_with_transformation(self):
+        data = [
+            {'name': 'Alice', 'age': 25, 'country': 'USA'},
+            {'name': 'Bob', 'age': 30, 'country': 'USA'},
+        ]
+
+        # Função de transformação que converte idade de anos para meses
+        def age_in_months(age_in_years):
+            return age_in_years * 12
+
+        # Calcula a média das idades em meses
+        average_age = avgAgeCountry(data, 'USA', age_in_months)
+        self.assertEqual(average_age, (25 * 12 + 30 * 12) / 2)  # Espera-se a média em meses
+
+if __name__ == '__main__':
+    unittest.main()
